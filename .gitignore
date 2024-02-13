@@ -41,6 +41,7 @@ core
 .python_history
 .wget-hsts
 EmbeddingDB/*
+.viminfo
 
 #Byte-compiled / optimized / DLL files
 __pycache__/

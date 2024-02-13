@@ -28,6 +28,7 @@ services:
     environment:
       - OPENAI_API_KEY=your_password
       - DATABASE_URL=mysql://root:your_password@mysql/chatbot
+    command: /bin/bash /root/src/uvicorn_monitor.sh
     networks:
       chatbot-network:
 
