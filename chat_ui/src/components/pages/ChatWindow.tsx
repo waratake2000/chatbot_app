@@ -1,6 +1,6 @@
 /* eslint-disable no-unreachable */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useCallback, useContext, useEffect, useRef } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ChatLayout } from "../template/ChatLayout";
 import { SendButtonActionsContext } from "../../providers/SendButtonActionsProvider";
 import { InputTextContext } from "../../providers/InputTextProvider";
@@ -19,8 +19,10 @@ export const ChatWindow = () => {
     const {chatAreaObjects, setChatAreaObjects} = useContext(ChatAreaObjectsContext)
     const { webSocketMessage, setwebSocketMessage, sendMessage, isConnected } = useWebSocket();
 
+    const [hasRunOnce, setHasRunOnce] = useState(false);
+
     useEffect(() => {
-        if (isConnected) {
+        if (isConnected && !hasRunOnce) {
             // ここに一度だけ実行したい関数や処理を書く
             const newBotArea = {
                 key: 0,
@@ -42,6 +44,8 @@ export const ChatWindow = () => {
                     "content": ""
                 }
             );
+
+            setHasRunOnce(true); // 処理が実行されたことを記録
         }
     }, [isConnected]);
 

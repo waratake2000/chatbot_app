@@ -1,7 +1,6 @@
 version: "3.8"
 
 services:
-
   chat-ui:
     container_name: chat_ui
     build:
@@ -27,8 +26,8 @@ services:
     restart: always
     tty: true
     environment:
-      - OPENAI_API_KEY=your_openai_key
-      - DATABASE_URL=mysql://admin:your_password@mysql/chatbot
+      - OPENAI_API_KEY=your_password
+      - DATABASE_URL=mysql://root:your_password@mysql/chatbot
     networks:
       chatbot-network:
 

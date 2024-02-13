@@ -7,11 +7,6 @@ import os
 import json
 from chatbot_router import chatbot_router
 
-# os.environ['DATABASE_URL'] = "mysql://root:imglab2023@mysql/mondoumuyou"
-
-# OPENAI_API_KEY="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"
-# os.environ["OPENAI_API_KEY"]=OPENAI_API_KEY
-
 app = FastAPI()
 
 app.add_middleware(

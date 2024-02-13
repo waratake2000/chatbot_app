@@ -21,18 +21,23 @@ export const WebSocketProvider = ({ children, url }) => {
             // setwebSocketMessage(JSON.parse(event.data));
         };
         socketRef.current.onerror = (error) => {
+            setIsConnected(false);
             console.error("WebSocket error:", error);
         };
         socketRef.current.onclose = () => {
+            setIsConnected(false);
             console.log("WebSocket connection closed");
         };
     };
 
     useEffect(() => {
-        console.log("再接続")
-        if (!isConnected) {
-            connectWebSocket()
-        }
+        const loop = setInterval(function () {
+            if (!isConnected) {
+                console.log("再接続")
+                connectWebSocket()
+                clearInterval(loop); // setIntervalを停止してループから抜ける
+            }
+        }, 1000);
     }, [isConnected]);
 
     const sendMessage = (data) => {

@@ -110,7 +110,7 @@ class StreamingConversationChain:
         convo_db_manager = AsyncCallbackManager([ConvoChainCallbackHandler(streaming_callback_handler)])
 
         question_gen_llm = ChatOpenAI(
-            model_name="gpt-3.5-turbo",
+            model_name="gpt-3.5-turbo-0125",
             max_retries=15,
             temperature=0.0,
             streaming=True,
@@ -118,7 +118,7 @@ class StreamingConversationChain:
         )
 
         streaming_llm = ChatOpenAI(
-            model_name='gpt-3.5-turbo',
+            model_name='gpt-3.5-turbo-0125',
             max_retries=15,
             temperature=0,
             callbacks=[streaming_callback_handler],
@@ -162,7 +162,7 @@ class StreamingConversationChain:
 
         question_gen_chain = LLMChain(llm=question_gen_llm, prompt=prompt_qg)  # , callback_manager=manager)
 
-        prompt_template_qa = """You are a helpful assistant. Please answer in Japanese! If the context is not relevant, please answer the question by using your own knowledge about the topic.
+        prompt_template_qa = """あなたは○○○○の代わりに質問に回答するチャットボットです。与えられた質問に自分の知識を使って100字程度で答えてください。
 
             {context}
 

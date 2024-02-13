@@ -66,13 +66,16 @@ def get_is_exist_id(user_id:int, chat_id: int) -> int:
     return bool(is_exist_id)
 
 buttons=[
-    {"label":"◯◯◯◯とはどのような人物ですか？","value":"◯◯◯◯とはどのような人物ですか？","key":"0"},
-    {"label":"◯◯◯◯の趣味を教えてください","value":"◯◯◯◯の趣味を教えてください","key":"1"},
-    {"label":"◯◯◯◯にはどのような経験がありますか？","value":"◯◯◯◯にはどのような経験がありますか？","key":"2"},
-    {"label":"◯◯◯◯のキャリアプランはなんですか？","value":"◯◯◯◯のキャリアプランはなんですか？","key":"3"},
-    {"label":"◯◯◯◯の長所と短所を教えてください","value":"◯◯◯◯の長所と短所を教えてください","key":"4"},
-    {"label":"◯◯◯◯の得意なことはなんですか？","value":"◯◯◯◯の得意なことはなんですか？","key":"5"},
-    {"label":"◯◯◯◯どのような仕事をしたいと考えていますか？","value":"◯◯◯◯どのような仕事をしたいと考えていますか？","key":"5"},
+    {"label":"○○○○とはどのような人物ですか？","value":"○○○○とはどのような人物ですか？","key":"0"},
+    {"label":"○○○○の趣味を教えてください","value":"○○○○の趣味を教えてください","key":"1"},
+    {"label":"○○○○にはどのような経験がありますか？","value":"○○○○にはどのような経験がありますか？","key":"2"},
+    {"label":"○○○○のキャリアプランはなんですか？","value":"○○○○のキャリアプランはなんですか？","key":"3"},
+    {"label":"○○○○の長所と短所を教えてください","value":"○○○○の長所と短所を教えてください","key":"4"},
+    {"label":"○○○○の得意なことはなんですか？","value":"○○○○の得意なことはなんですか？","key":"5"},
+    {"label":"○○○○どのような仕事をしたいと考えていますか？","value":"○○○○どのような仕事をしたいと考えていますか？","key":"5"},
+    {"label":"○○○○の出身中学はどこですか？","value":"○○○○の出身中学はどこですか？","key":"6"},
+    {"label":"○○○○の出身高校はどこですか？","value":"○○○○の出身高校はどこですか？","key":"7"},
+    {"label":"○○○○の出身大学はどこですか？","value":"○○○○の出身大学はどこですか？","key":"7"},
 ]
 
 sequence_handler = SequenceHandler()
@@ -121,12 +124,10 @@ async def qa_next_id(id, websocket, receive_json):
         event_id = insert_event_store(user_id , chat_id , id)
         recieve_message=receive_json["content"]
         insert_recieve_message(event_id,recieve_message)
-        send_message = 'こんにちわ!\n私は◯◯◯◯についての質問を受け付けるチャットボットです！\n何か質問はございますか？\n例)'
+        send_message = 'こんにちわ!\n私は○○○○についての質問を受け付けるチャットボットです！\n何か質問はございますか？\n例)'
         await StreamMessage.simple_text(websocket, send_message)
 
         select_buttons = random.sample(buttons, 2)
-
-
         await StreamMessage.select_button(websocket, select_buttons)
         insert_send_message(event_id,send_message)
         return {'next_id': 0, 'continue': False}
@@ -170,20 +171,21 @@ async def send_text(id, websocket, receive_json):
             insert_send_message(event_id,send_message)
             return {'next_id': 0, 'continue': False}
         elif message_label == "いいえ":
-            send_message = '質問をまとめ、担当者に報告しました！\n引き続きご利用ください！'
-            await StreamMessage.simple_text(websocket, send_message)
             insert_recieve_message(event_id,message_label)
-            insert_send_message(event_id,send_message)
+            send_message = '他にお聞きしたいことはございますか？\n'
+            await StreamMessage.simple_text(websocket, send_message)
+            select_buttons = random.sample(buttons, 3)
+            await StreamMessage.select_button(websocket, select_buttons)
             return {'next_id': 0, 'continue': False}
     elif receive_json["type"] == 'text' and latest_sequence_id==3:
         return {'next_id': 0, 'continue': True}
     else:
-        send_message = 'ボタンをクリックして再度回答してください。'
+        # send_message = 'ボタンをクリックして再度回答してください。'
         event_id = insert_event_store(user_id , chat_id , id)
         insert_recieve_message(event_id,recieve_message)
-        await StreamMessage.simple_text(websocket, send_message)
-        insert_send_message(event_id,send_message)
-        return {'next_id': 2, 'continue': True}
+        # await StreamMessage.simple_text(websocket, send_message)
+        # insert_send_message(event_id,send_message)
+        return {'next_id': 0, 'continue': True}
 
 async def chatbot_router(websocket, receive_json):
     user_id = receive_json['userId']
@@ -191,21 +193,6 @@ async def chatbot_router(websocket, receive_json):
     latest_sequence_id = get_latest_sequence_id(user_id, chat_id)
     print("receive_json")
     print(receive_json)
-    # {
-    #     'userId': 1156986,
-    #     'chatId': 1769902,
-    #     'type': 'button',
-    #     'content': {
-    #         'label': '◯◯◯◯のキャリアプランはなんですか？',
-    #         'key': '3',
-    #         'value': '◯◯◯◯のキャリアプランはなんですか？'
-    #     }
-    # }
-    # {'userId': 1688493, 'chatId': 1581866, 'type': 'text', 'content': 'こんにちわ'}
-
-    # if receive_json["type"] == "button":
-
-
     await sequence_handler.handle_sequence(latest_sequence_id, websocket, receive_json)
 
 
