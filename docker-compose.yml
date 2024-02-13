@@ -1,0 +1,72 @@
+version: "3.8"
+
+services:
+
+  chat-ui:
+    container_name: chat_ui
+    build:
+      context: ./chat_ui
+    volumes:
+      - ./chat_ui:/root
+    ports:
+      - 80:80
+    restart: always
+    tty: true
+    networks:
+      chatbot-network:
+
+  app:
+    container_name: app
+    build:
+      context: ./app
+    volumes:
+      - ./app:/root
+      - ./EmbeddingDB:/root/EmbeddingDB
+    ports:
+      - 8000:8000
+    restart: always
+    tty: true
+    environment:
+      - OPENAI_API_KEY=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
+      - DATABASE_URL=mysql://root:imglab2023@mysql/chatbot
+    networks:
+      chatbot-network:
+
+  mysql:
+    container_name: mysql
+    image: mysql:8
+    restart: always
+    tty: true
+    environment:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: imglab2023
+      MYSQL_ROOT_PASSWORD: imglab2023
+      MYSQL_DATABASE: chatbot
+    command: --default-authentication-plugin=mysql_native_password
+    platform: linux/x86_64
+    expose:
+      - 3306
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql_data:/var/lib
+    networks:
+      chatbot-network:
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - 8090:8080
+    networks:
+      chatbot-network:
+
+volumes:
+  mysql_db:
+      driver: local
+networks:
+  chatbot-network:
+
