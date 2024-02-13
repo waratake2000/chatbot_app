@@ -28,7 +28,7 @@ services:
     tty: true
     environment:
       - OPENAI_API_KEY=your_openai_key
-      - DATABASE_URL=mysql://admin:password@mysql/chatbot
+      - DATABASE_URL=mysql://admin:your_password@mysql/chatbot
     networks:
       chatbot-network:
 
@@ -39,8 +39,8 @@ services:
     tty: true
     environment:
       MYSQL_USER: admin
-      MYSQL_PASSWORD: imglab2023
-      MYSQL_ROOT_PASSWORD: imglab2023
+      MYSQL_PASSWORD: your_password
+      MYSQL_ROOT_PASSWORD: your_password
       MYSQL_DATABASE: chatbot
     command: --default-authentication-plugin=mysql_native_password
     platform: linux/x86_64
