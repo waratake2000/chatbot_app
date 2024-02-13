@@ -27,8 +27,8 @@ services:
     restart: always
     tty: true
     environment:
-      - OPENAI_API_KEY=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
-      - DATABASE_URL=mysql://root:imglab2023@mysql/chatbot
+      - OPENAI_API_KEY=your_openai_key
+      - DATABASE_URL=mysql://admin:password@mysql/chatbot
     networks:
       chatbot-network:
 
